@@ -1,17 +1,17 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
 import { SUPABASEKEY, SUPABASEURL, CRYPTOHASHSECRET } from "../../Keys";
 import CryptoJS from "crypto-js";
 
 const supabase = createClient(SUPABASEURL, SUPABASEKEY);
-export default class Login extends Component {
+class Login extends Component {
   state = {
     email: "",
     password: "",
     error: "",
     passStatus: "",
-    curruntView: "retailer",
+    curruntView: "",
   };
   handleInputs = (event) => {
     this.setState({
@@ -41,7 +41,7 @@ export default class Login extends Component {
             var bytes = CryptoJS.AES.decrypt(user.password, CRYPTOHASHSECRET);
             var originalText = bytes.toString(CryptoJS.enc.Utf8);
             if (originalText === password) {
-              return "user login successfully!";
+              this.props.history.push("/customer");
             }
           })
         );
@@ -68,7 +68,7 @@ export default class Login extends Component {
             );
             var originalText = bytes.toString(CryptoJS.enc.Utf8);
             if (originalText === password) {
-              return "retailer login successfully!";
+              this.props.history.push("/retailer");
             }
           })
         );
@@ -176,3 +176,5 @@ export default class Login extends Component {
     );
   }
 }
+
+export default withRouter(Login);

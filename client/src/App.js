@@ -1,16 +1,13 @@
 import React, { Component } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Authentifi from "./contracts/Authentifi.json";
 import getWeb3 from "./getWeb3";
 
 import Login from "./Components/Auth/Login";
 import Signup from "./Components/Auth/Signup";
 import Home from "./Components/Home";
+import Retailer from "./Components/Retailer";
+import Customer from "./Components/Customer";
 
 class App extends Component {
   state = {
@@ -71,17 +68,26 @@ class App extends Component {
           <Route exact path="/">
             <Home />
           </Route>
-          <Route path="/login">
+          <Route exact path="/login">
             <Login
               contarctInstance={this.state.contract}
               accounts={this.state.accounts}
             />
           </Route>
-          <Route path="/signup">
+          <Route exact path="/signup">
             <Signup
               contarctInstance={this.state.contract}
               accounts={this.state.accounts}
             />
+          </Route>
+          <Route exact path="/retailer">
+            <Retailer
+              contarctInstance={this.state.contract}
+              accounts={this.state.accounts}
+            />
+          </Route>
+          <Route exact path="/customer">
+            <Customer />
           </Route>
         </Switch>
       </Router>

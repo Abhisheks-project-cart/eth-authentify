@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { SUPABASEKEY, SUPABASEURL, CRYPTOHASHSECRET } from "../../Keys";
 import { createClient } from "@supabase/supabase-js";
 import hashMD5 from "md5";
@@ -8,7 +8,7 @@ import CryptoJS from "crypto-js";
 
 const supabase = createClient(SUPABASEURL, SUPABASEKEY);
 
-export default class Signup extends Component {
+class Signup extends Component {
   state = {
     name: "",
     email: "",
@@ -54,9 +54,11 @@ export default class Signup extends Component {
     }
     if (curruntView === "customer") {
       this.createCustomer(name, email, hashEmail, phoneNo, hashPass);
+      this.props.history.push("/login");
     }
     if (curruntView === "retailer") {
       this.createReatiler(name, email, hashEmail, phoneNo, hashPass, location);
+      this.props.history.push("/retailer/create-code");
     }
   };
 
@@ -318,3 +320,5 @@ export default class Signup extends Component {
     );
   }
 }
+
+export default withRouter(Signup);
