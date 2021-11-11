@@ -17,7 +17,7 @@ class Signup extends Component {
     error: "",
     passStatus: "",
     location: "",
-    curruntView: "retailer",
+    curruntView: "",
   };
   handleInputs = (event) => {
     this.setState({
@@ -54,11 +54,14 @@ class Signup extends Component {
     }
     if (curruntView === "customer") {
       this.createCustomer(name, email, hashEmail, phoneNo, hashPass);
-      this.props.history.push("/login");
+      this.props.history.push({
+        pathname: "/customer",
+        state: { user: email },
+      });
     }
     if (curruntView === "retailer") {
       this.createReatiler(name, email, hashEmail, phoneNo, hashPass, location);
-      this.props.history.push("/retailer/create-code");
+      this.props.history.push("/retailer");
     }
   };
 
@@ -302,13 +305,13 @@ class Signup extends Component {
                   className="text-white w-full bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg"
                   onClick={this.handleSignup}
                 >
-                  Button
+                  Sign Up
                 </button>
                 <p className="text-xs text-center text-gray-500 mt-3">
-                  Havent Register yet{" "}
+                  Already Register{" "}
                   <span className="">
-                    <Link className="text-red-600" to="/signup">
-                      Click Here !
+                    <Link className="text-red-600" to="/login">
+                      Login here !
                     </Link>
                   </span>
                 </p>

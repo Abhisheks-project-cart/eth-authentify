@@ -3,3 +3,7 @@
 * {
   font-family: "Montserrat", sans-serif !important;
 }
+
+.fileContainer .chooseFileButton{
+  background: none;
+}

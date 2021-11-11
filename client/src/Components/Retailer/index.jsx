@@ -59,6 +59,10 @@ class Retailer extends Component {
       .setInitialOwner(productId, hashRetailer, hashCustomer)
       .send({ from: this.props.accounts[0] });
 
+    const customerdata = await this.props.contarctInstance.methods
+      .getCustomeDetails(hashCustomer)
+      .call();
+    console.log(customerdata);
     const response = await this.props.contarctInstance.methods
       .getCodes(hashCustomer)
       .call();
@@ -71,7 +75,7 @@ class Retailer extends Component {
       <Router>
         <div className="container mx-auto">
           <h1
-            className=" text-center underline text-2xl mt-12 font-bold"
+            className="cursor-pointer text-center underline text-2xl mt-12 font-bold"
             onClick={() => this.props.history.push("/login")}
           >
             Authentify
@@ -98,12 +102,34 @@ class Retailer extends Component {
                 <li className="mx-4 cursor-pointer">
                   <Link to="/retailer/set-owner">Set Owner</Link>
                 </li>
+                <li
+                  className="mx-4 cursor-pointer"
+                  onClick={() => {
+                    this.props.logout();
+                    this.props.history.push("/");
+                  }}
+                >
+                  Logout
+                </li>
               </ul>
             </div>
           </nav>
           {/* navbar ends here */}
-
+          
           <Switch>
+            <Route exact path="/retailer">
+              <div className="flex justify-center items-center mt-10">
+              <div className="flex flex-col justify-center items-center bg-blue-400 text-white w-80 mx-12 h-40 rounded-sm">
+                <h1>Retailer Home Page</h1>
+                <Link
+                  to="/retailer/create-code"
+                  className="text-sm text-gray-800"
+                >
+                  Register Product Here{" "}
+                </Link>
+              </div>
+            </div>
+          </Route>
             <Route exact path="/retailer/create-code">
               <CreateCode callback={this.createCode} />
             </Route>

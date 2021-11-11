@@ -3,6 +3,8 @@ import { Link, withRouter } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
 import { SUPABASEKEY, SUPABASEURL, CRYPTOHASHSECRET } from "../../Keys";
 import CryptoJS from "crypto-js";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const supabase = createClient(SUPABASEURL, SUPABASEKEY);
 class Login extends Component {
@@ -34,21 +36,39 @@ class Login extends Component {
         .select("*")
         .eq("email", email);
 
-      if (User.length) {
-        console.log(User);
-        console.log(
-          User.map((user) => {
-            var bytes = CryptoJS.AES.decrypt(user.password, CRYPTOHASHSECRET);
-            var originalText = bytes.toString(CryptoJS.enc.Utf8);
-            if (originalText === password) {
-              this.props.history.push("/customer");
-            }
-          })
-        );
+      if (User.length === 0) {
+        toast("Customer Doesn't resgisted!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
-      if (error) {
-        this.setState({
-          error: error,
+      if (User.length) {
+        User.map((user) => {
+          var bytes = CryptoJS.AES.decrypt(user.password, CRYPTOHASHSECRET);
+          var originalText = bytes.toString(CryptoJS.enc.Utf8);
+          if (originalText === password) {
+            this.props.setAuth(email, "customer");
+            this.props.history.push({
+              pathname: "/customer",
+              state: { user: email },
+            });
+          }
+          if (originalText !== password) {
+            toast("Password doesn't match", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          }
         });
       }
     }
@@ -58,6 +78,17 @@ class Login extends Component {
         .select("*")
         .eq("email", email);
 
+      if (Retailer.length === 0) {
+        toast("Customer Doesn't resgisted!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
       if (Retailer.length) {
         console.log(Retailer);
         console.log(
@@ -68,7 +99,19 @@ class Login extends Component {
             );
             var originalText = bytes.toString(CryptoJS.enc.Utf8);
             if (originalText === password) {
+              this.props.setAuth(email, "retailer");
               this.props.history.push("/retailer");
+            }
+            if (originalText !== password) {
+              toast("Password doesn't match", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
             }
           })
         );
@@ -85,6 +128,17 @@ class Login extends Component {
     const { email, password, curruntView } = this.state;
     return (
       <div>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <section className="text-gray-600 body-font">
           <div className="container px-5 py-24 mx-auto flex flex-col flex-wrap justify-center items-center">
             <div className="lg:w-3/5 md:w-1/2 md:pr-16 lg:pr-0 pr-0 mb-16">
@@ -159,7 +213,7 @@ class Login extends Component {
                 onClick={this.handleLoggin}
                 className="text-white bg-red-500 border-0 py-2 px-8 focus:outline-none hover:bg-red-600 rounded text-lg"
               >
-                Button
+                Login
               </button>
               <p className="text-xs text-center text-gray-500 mt-3">
                 Havent Register yet{" "}

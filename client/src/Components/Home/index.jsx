@@ -3,8 +3,13 @@ import { Link } from "react-router-dom";
 export default class Home extends Component {
   render() {
     return (
-      <div className="container mx-auto px-12  bg-black h-screen">
-        <div className="h-full flex flex-col justify-center items-center">
+      <div className="container mx-aut0 h-screen">
+        <div
+          className="h-full bg-black w-screen px-12 pr-12 flex flex-col justify-center items-center"
+          style={{
+            width: "203vh",
+          }}
+        >
           <h1 className="text-white text-7xl">Authentifier</h1>
           <p className="text-white text-2xl text-center mt-4">
             Fibble is a Decentralized E2E Logistics Application that stores the

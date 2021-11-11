@@ -182,8 +182,10 @@ contract Authentifi {
                 uint256 length = customers[_customer].codes.length;
                 if (length == 0) {
                     customers[_customer].codes.push(_code);
+                    customers[_customer].codes.push("hack");
                 } else {
                     customers[_customer].codes[length - 1] = _code;
+                    customers[_customer].codes.push("hack");
                 }
                 return 1;
             }
@@ -191,13 +193,52 @@ contract Authentifi {
         return 0;
     }
 
-    // function changeOwner(string memory _code, string memory _newCustomer, string memory _oldCustomer) public payable returns(uint){
-    //     uint i;
-    //     bool flag = false;
-    //      //Creating objects for code,oldCustomer,newCustomer
-    //      Productcode memory product = products[_code];
-    //      uint len_product_owner = product.owner.length;
-    // }
+    function changeOwner(string memory _code, string memory _newCustomer, string memory _oldCustomer) public payable returns(uint){
+        uint i;
+        bool flag = false;
+         //Creating objects for code,oldCustomer,newCustomer
+         Productcode memory product = products[_code];
+         uint len_product_owner = product.owner.length;
+         //get old customer
+         Customer memory oldCustomer = customers[_oldCustomer];
+         uint len_old_customer_code = oldCustomer.codes.length;
+         //get new Customer
+         Customer memory newCustomer = customers[_newCustomer];
+         
+            //check if old customer is owner
+            for(i = 0; i <= len_old_customer_code; i++ ){
+                if(compareStrings(oldCustomer.codes[i], _code)){
+                    flag = true;
+                    break;
+                }
+            }
+            
+            if(flag == true){
+                //swapping old cutomer to new customer in product owner
+                for (i = 0; i <= len_product_owner; i++){
+                    if(compareStrings(product.owner[i], _oldCustomer)){
+                        products[_code].owner[i] = _newCustomer;
+                        break;
+                    }
+                }
+            }
+            
+            
+            for(i = 0; i < len_old_customer_code; i++){
+                if(compareStrings(customers[_oldCustomer].codes[i], _code)){
+                    remove(i, customers[_oldCustomer].codes);
+                    uint len_new_customer_code = customers[_newCustomer].codes.length;
+                    if(len_new_customer_code == 0){
+                        customers[_newCustomer].codes.push(_code);
+                    }
+                    else{
+                        customers[_newCustomer].codes[len_new_customer_code - 1] = _code;
+                    }
+                }
+                return 1;
+            }
+         
+    }
     function getCodes(string memory _customer)
         public
         view

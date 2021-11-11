@@ -15,6 +15,8 @@ class App extends Component {
     accounts: null,
     contract: null,
     userAuthStaus: false,
+    auth: null,
+    authType: null,
   };
 
   componentDidMount = async () => {
@@ -45,6 +47,20 @@ class App extends Component {
     }
   };
 
+  SetAuth = (auth, type) => {
+    this.setState({
+      auth: auth,
+      authType: type,
+    });
+  };
+
+  logOutAuth = () => {
+    this.setState({
+      auth: null,
+      authType: "",
+    });
+  };
+
   // runExample = async () => {
   //   const { accounts, contract } = this.state;
 
@@ -63,34 +79,43 @@ class App extends Component {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/login">
-            <Login
-              contarctInstance={this.state.contract}
-              accounts={this.state.accounts}
-            />
-          </Route>
-          <Route exact path="/signup">
-            <Signup
-              contarctInstance={this.state.contract}
-              accounts={this.state.accounts}
-            />
-          </Route>
-          <Route exact path="/retailer">
-            <Retailer
-              contarctInstance={this.state.contract}
-              accounts={this.state.accounts}
-            />
-          </Route>
-          <Route exact path="/customer">
-            <Customer />
-          </Route>
-        </Switch>
-      </Router>
+      <div className="container w-screen">
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route exact path="/login">
+              <Login
+                contarctInstance={this.state.contract}
+                accounts={this.state.accounts}
+                setAuth={this.SetAuth}
+              />
+            </Route>
+            <Route exact path="/signup">
+              <Signup
+                contarctInstance={this.state.contract}
+                accounts={this.state.accounts}
+                setAuth={this.SetAuth}
+              />
+            </Route>
+            <Route exact path="/retailer">
+              <Retailer
+                contarctInstance={this.state.contract}
+                accounts={this.state.accounts}
+                logout={this.logOutAuth}
+              />
+            </Route>
+            <Route exact path="/customer">
+              <Customer
+                contarctInstance={this.state.contract}
+                accounts={this.state.accounts}
+                logout={this.logOutAuth}
+              />
+            </Route>
+          </Switch>
+        </Router>
+      </div>
     );
   }
 }
